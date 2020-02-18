@@ -174,21 +174,9 @@ License:     NumPy license (see LICENSE.txt in the NumPy source code)
 Copyright 1999 - 2011 Pearu Peterson all rights reserved.
 http://cens.ioc.ee/projects/f2py2e/""" % (f2py_version, numpy_version)
 
+###IMPROVE CCN##########
 
-def scaninputline(inputline):
-    files, skipfuncs, onlyfuncs, debug = [], [], [], []
-    f, f2, f3, f5, f6, f7, f8, f9, f10 = 1, 0, 0, 0, 0, 0, 0, 0, 0
-    verbose = 1
-    dolc = -1
-    dolatexdoc = 0
-    dorestdoc = 0
-    wrapfuncs = 1
-    buildpath = '.'
-    include_paths = []
-    signsfile, modulename = None, None
-    options = {'buildpath': buildpath,
-               'coutput': None,
-               'f2py_wrapper_output': None}
+def checkinput(inputline,files, skipfuncs, onlyfuncs, debug, f, f2, f3, f5, f6, f7, f8, f9, f10,verbose,dolc,dolatexdoc,dorestdoc,wrapfuncs,buildpath,include_paths,signsfile, modulename,options):
     for l in inputline:
         if l == '':
             pass
@@ -286,6 +274,31 @@ def scaninputline(inputline):
             skipfuncs.append(l)
         elif f == 0:
             onlyfuncs.append(l)
+
+
+
+
+
+
+
+def scaninputline(inputline):
+    files, skipfuncs, onlyfuncs, debug = [], [], [], []
+    f, f2, f3, f5, f6, f7, f8, f9, f10 = 1, 0, 0, 0, 0, 0, 0, 0, 0
+    verbose = 1
+    dolc = -1
+    dolatexdoc = 0
+    dorestdoc = 0
+    wrapfuncs = 1
+    buildpath = '.'
+    include_paths = []
+    signsfile, modulename = None, None
+    options = {'buildpath': buildpath,
+               'coutput': None,
+               'f2py_wrapper_output': None}
+
+    checkinput(inputline, files, skipfuncs, onlyfuncs, debug, f, f2, f3, f5, f6, f7, f8, f9, f10, verbose, dolc,
+               dolatexdoc, dorestdoc, wrapfuncs, buildpath, include_paths, signsfile, modulename, options)
+
     if not f5 and not files and not modulename:
         print(__usage__)
         sys.exit()
