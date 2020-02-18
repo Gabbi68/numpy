@@ -888,8 +888,14 @@ def qr(a, mode='reduced'):
     array([  1.1e-16,   1.0e+00])
 
     """
+    
+    flagDict = {}
+    file = open("qr.txt", "a")
+
     if mode not in ('reduced', 'complete', 'r', 'raw'):
+        flagDict["qr0"] = "qr0"
         if mode in ('f', 'full'):
+            flagDict["qr1"] = "qr1"
             # 2013-04-01, 1.8
             msg = "".join((
                     "The 'full' option is deprecated in favor of 'reduced'.\n",
@@ -897,11 +903,17 @@ def qr(a, mode='reduced'):
             warnings.warn(msg, DeprecationWarning, stacklevel=3)
             mode = 'reduced'
         elif mode in ('e', 'economic'):
+            flagDict["qr2"] = "qr2"
             # 2013-04-01, 1.8
             msg = "The 'economic' option is deprecated."
             warnings.warn(msg, DeprecationWarning, stacklevel=3)
             mode = 'economic'
         else:
+            flagDict["qr3"] = "qr3"
+            file.write("============================================\n")
+            for i in flagDict:
+                file.write(i+" ")
+            file.write("============================================\n")
             raise ValueError("Unrecognized mode '%s'" % mode)
 
     a, wrap = _makearray(a)
@@ -914,9 +926,11 @@ def qr(a, mode='reduced'):
     tau = zeros((mn,), t)
 
     if isComplexType(t):
+        flagDict["qr4"] = "qr4"
         lapack_routine = lapack_lite.zgeqrf
         routine_name = 'zgeqrf'
     else:
+        flagDict["qr5"] = "qr5"
         lapack_routine = lapack_lite.dgeqrf
         routine_name = 'dgeqrf'
 
@@ -925,6 +939,11 @@ def qr(a, mode='reduced'):
     work = zeros((lwork,), t)
     results = lapack_routine(m, n, a, max(1, m), tau, work, -1, 0)
     if results['info'] != 0:
+        flagDict["qr6"] = "qr6"
+        file.write("============================================\n")
+        for i in flagDict:
+            file.write(i+" ")
+        file.write("============================================\n")
         raise LinAlgError('%s returns %d' % (routine_name, results['info']))
 
     # do qr decomposition
@@ -932,34 +951,59 @@ def qr(a, mode='reduced'):
     work = zeros((lwork,), t)
     results = lapack_routine(m, n, a, max(1, m), tau, work, lwork, 0)
     if results['info'] != 0:
+        flagDict["qr7"] = "qr7"
+        file.write("============================================\n")
+        for i in flagDict:
+            file.write(i+" ")
+        file.write("============================================\n")
         raise LinAlgError('%s returns %d' % (routine_name, results['info']))
 
     # handle modes that don't return q
     if mode == 'r':
+        flagDict["qr8"] = "qr8"
         r = _fastCopyAndTranspose(result_t, a[:, :mn])
+        file.write("============================================\n")
+        for i in flagDict:
+            file.write(i+" ")
+        file.write("============================================\n")
         return wrap(triu(r))
 
     if mode == 'raw':
+        flagDict["qr9"] = "qr9"
+        file.write("============================================\n")
+        for i in flagDict:
+            file.write(i+" ")
+        file.write("============================================\n")
         return a, tau
 
     if mode == 'economic':
+        flagDict["qr10"] = "qr10"
         if t != result_t :
+            flagDict["qr11"] = "qr11"
             a = a.astype(result_t, copy=False)
+        file.write("============================================\n")
+        for i in flagDict:
+            file.write(i+" ")
+        file.write("============================================\n")
         return wrap(a.T)
 
     #  generate q from a
     if mode == 'complete' and m > n:
+        flagDict["qr12"] = "qr12"
         mc = m
         q = empty((m, m), t)
     else:
+        flagDict["qr13"] = "qr13"
         mc = mn
         q = empty((n, m), t)
     q[:n] = a
 
     if isComplexType(t):
+        flagDict["qr14"] = "qr14"
         lapack_routine = lapack_lite.zungqr
         routine_name = 'zungqr'
     else:
+        flagDict["qr15"] = "qr15"
         lapack_routine = lapack_lite.dorgqr
         routine_name = 'dorgqr'
 
@@ -968,6 +1012,11 @@ def qr(a, mode='reduced'):
     work = zeros((lwork,), t)
     results = lapack_routine(m, mc, mn, q, max(1, m), tau, work, -1, 0)
     if results['info'] != 0:
+        flagDict["qr16"] = "qr16"
+        file.write("============================================\n")
+        for i in flagDict:
+            file.write(i+" ")
+        file.write("============================================\n")
         raise LinAlgError('%s returns %d' % (routine_name, results['info']))
 
     # compute q
@@ -975,11 +1024,20 @@ def qr(a, mode='reduced'):
     work = zeros((lwork,), t)
     results = lapack_routine(m, mc, mn, q, max(1, m), tau, work, lwork, 0)
     if results['info'] != 0:
+        flagDict["qr17"] = "qr17"
+        file.write("============================================\n")
+        for i in flagDict:
+            file.write(i+" ")
+        file.write("============================================\n")
         raise LinAlgError('%s returns %d' % (routine_name, results['info']))
 
     q = _fastCopyAndTranspose(result_t, q[:mc])
     r = _fastCopyAndTranspose(result_t, a[:, :mc])
 
+    file.write("============================================\n")
+    for i in flagDict:
+        file.write(i+" ")
+    file.write("============================================\n")
     return wrap(q), wrap(triu(r))
 
 
