@@ -1653,6 +1653,9 @@ class TestQR:
         assert_(isinstance(r2, a_type))
         assert_almost_equal(r2, r1)
 
+        # mode is something unrecognized
+        assert_raises(ValueError, linalg.qr, a, mode="cat_mode")
+
 
     @pytest.mark.parametrize(["m", "n"], [
         (3, 0),
