@@ -1306,7 +1306,6 @@ class _TestNormGeneral(_TestNormBase):
         # or column separately.
         
         # test axis type error
-        assert_raises(TypeError, norm, A, 0, 'axis')
         
         A = array([[1, 2, 3], [4, 5, 6]], dtype=self.dt)
         for order in [None, -1, 0, 1, 2, 3, np.Inf, -np.Inf]:
@@ -1340,6 +1339,8 @@ class _TestNormGeneral(_TestNormBase):
                         expected = [norm(B[:].take(k, axis=k_index).T, ord=order)
                                     for k in range(B.shape[k_index])]
                     assert_almost_equal(n, expected)
+                    
+        assert_raises(TypeError, norm, A, 0, 'axis')
 
     def test_keepdims(self):
         A = np.arange(1, 25, dtype=self.dt).reshape(2, 3, 4)
