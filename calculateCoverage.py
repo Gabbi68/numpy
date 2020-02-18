@@ -43,11 +43,14 @@ tensordotDict = addInDict(tensordotDict, "./build/testenv/lib/python3.8/site-pac
 tensordotTotalBranches = 13   #need to update manually
 print("coverage tensordot: ", len(tensordotDict)/tensordotTotalBranches)
 
-'''
-We don't have the file for buildcallback coverage yet...
 
 buildcallbackDict={}
 buildcallbackDict = addInDict(buildcallbackDict, "./build/testenv/lib/python3.8/site-packages/buildcallback.txt")
 buildcallbackTotalBranches = 34   #need to update manually
 print("coverage buildcallback: ", len(buildcallbackDict)/buildcallbackTotalBranches)
-'''
+
+qrDict={}
+qrDict = addInDict(qrDict, "./build/testenv/lib/python3.8/site-packages/qr.txt")
+qrTotalBranches = 18   #need to update manually
+print("coverage qr: ", len(qrDict)/qrTotalBranches)
+
